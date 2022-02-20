@@ -1,427 +1,210 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
- 
-
 Metadata:
-
   License: Apache-2.0
-
 Description: 'CFT Sample Template With Autoscalling and EC2:'
 
- 
-
 Parameters:
-
-   
-
+    
     MyALBName:
-
         Type: 'String'
-
-        Default: 'dev-alb-noram-app'
-
-       
-
+        Default: 'dev-alb-akash-app'
+                
     VPC:
-
         Type: 'AWS::EC2::VPC::Id'
-
         Description: Please select the VPC.
-
-       
-
+        
     Subnet1:
-
       Type: 'AWS::EC2::Subnet::Id'
-
-      Description: Subnet one for ALB
-
- 
+      Description: Select two subnet for Autoscalling group and must be matched with ALB subnets.
 
     Subnet2:
-
       Type: 'AWS::EC2::Subnet::Id'
-
-      Description: Subnet two for ALB
-
-   
-
-    #EC2Subnet:
-
-        #Type: 'AWS::EC2::Subnet::Id'
-
-       # Description: Select one subnets for EC2
-
+      Description: Select two subnet for Autoscalling group and must be matched with ALB subnets.
         
-
     Subnets:
-
         Type: 'List<AWS::EC2::Subnet::Id>'
-
-        Description: Select two subnet for Autoscalling group and must be matched with ALB subnets.  
-
+        Description: Select two subnet for Autoscalling group and must be matched with ALB subnets.   
         
-
     ImageID:
-
         Type: String
-
-        Description: It will be used in Launch Configuration and EC2 will use it.
-
-        Default: "ami-033b95fb8079dc481" 
-
+        Default: "ami-033b95fb8079dc481"  
         
-
     KeyName:
-
         Description: EC2 Key
-
         Type: AWS::EC2::KeyPair::KeyName
-
         ConstraintDescription: EC2 KeyPair.
-
-       
-
+        
     InstanceType:
-
         Description: EC2 instance type
-
         Type: String
-
         Default: t2.small
-
         AllowedValues:
-
             - t2.small
-
             - m1.small
-
             - m1.large
-
         Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
-
-       
-
+        
     SNSSubscriptionEMail:
-
         Description: "EMail address to notify if there are any scaling operations"
-
         Type: String
-
         Default: ""
-
-       
-
+        
     LaunchTemplateVersion:
-
         Type: Number
-
-        Default: 1   
-
- 
+        Default: 1    
 
 Resources:
 
- 
-
     SNSNotificationTopic:
-
         Type: AWS::SNS::Topic
-
         Properties:
-
             TopicName: !Ref MyALBName
-
             DisplayName: !Ref MyALBName
 
- 
-
-           
-
+            
     EC2LaunchTemplate:
-
         Type: AWS::EC2::LaunchTemplate
-
-        Properties:
-
+        Properties: 
             LaunchTemplateName: !Ref MyALBName
-
             LaunchTemplateData:
-
                 ImageId: !Ref 'ImageID'
-
                 InstanceType: !Ref 'InstanceType'
-
                 KeyName: !Ref 'KeyName'
-
                 BlockDeviceMappings:
-
-                - DeviceName: /dev/xvda  
-
+                - DeviceName: /dev/xvda   
                   Ebs:
-
                     VolumeSize: 10
-
                     VolumeType: gp2
-
                 UserData:
-
-                    Fn::Base64:
-
+                    Fn::Base64: 
                         !Sub |
-
                             #!/bin/bash -xe
-
                             yum install httpd -y
-
                             sleep 15
-
                             echo "Hello Page" >> /var/www/html/index.html
-
                             sleep 5
-
                             sudo service httpd start
-
             TagSpecifications:
-
-                -
-
+                - 
                     ResourceType: launch-template
-
                     Tags:
-
                         - Key: "Name"
-
                           Value: "testing"
-
-   
-
+    
     InstanceSecurityGroup:
-
         Type: AWS::EC2::SecurityGroup
-
         Properties:
-
             GroupDescription: Enable SSH access
-
             VpcId: !Ref VPC
-
             Tags:
-
                 - Key: "CFT WebServer SG"
-
                   Value: "CFT WebServer SG"
-
             SecurityGroupIngress:
-
             - IpProtocol: tcp
-
               FromPort: 22
-
               ToPort: 22
-
               CidrIp: '0.0.0.0/0'
-
             - IpProtocol: tcp
-
               FromPort: 80
-
               ToPort: 80
-
               CidrIp: '0.0.0.0/0'
-
               
-
     ALBSecurityGroup:
-
         Type: "AWS::EC2::SecurityGroup"
-
         Properties:
-
             GroupDescription: "Allow incoming from anywhere to HTTPS and HTTP"
-
             SecurityGroupIngress:
-
                 - CidrIp: "0.0.0.0/0"
-
                   FromPort: 80
-
                   IpProtocol: "tcp"
-
                   ToPort: 80
-
                 - CidrIp: "0.0.0.0/0"
-
                   FromPort: 443
-
                   IpProtocol: "tcp"
-
                   ToPort: 443
-
-       
-
+        
             Tags:
-
                 - Key: "Created By"
-
                   Value: "CFT Template"
 
- 
-
             VpcId: !Ref "VPC"
-
-   
-
+    
     ALBSGIngressInInstanceSG:
-
         Type: 'AWS::EC2::SecurityGroupIngress'
-
         Properties:
-
             GroupId: !Ref InstanceSecurityGroup
-
             IpProtocol: tcp
-
             FromPort: 80
-
             ToPort: 80
-
             SourceSecurityGroupId: !GetAtt ALBSecurityGroup.GroupId
-
-   
-
+    
     AppLoadbalancer:
-
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-
         Properties:
-
             Name: !Ref 'MyALBName'
-
-            Subnets:
-
+            Subnets: 
               - !Ref Subnet1
-
               - !Ref Subnet2
-
             Scheme: 'internet-facing'
-
             SecurityGroups: [!Ref 'ALBSecurityGroup']
-
             Type: application
-
-        
-
+         
             
-
     MyTargetGroup:
-
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
-
         Properties:
-
             HealthCheckEnabled: true
-
             Name: !Ref MyALBName
-
             TargetType: instance
-
             HealthCheckIntervalSeconds: 20
-
             HealthCheckPath: /index.html
-
             HealthCheckPort: traffic-port
-
             HealthCheckProtocol: HTTP
-
             HealthCheckTimeoutSeconds: 5
-
             HealthyThresholdCount: 5
-
             IpAddressType: "ipv4"
-
             VpcId: !Ref VPC
-
-            Matcher:
-
+            Matcher: 
                 HttpCode: "200-399"
-
             Port: 80
-
             Protocol: HTTP
-
-           
-
+            
     Listener:
-
         Type: 'AWS::ElasticLoadBalancingV2::Listener'
-
         Properties:
-
-           DefaultActions:
-
+            DefaultActions:
                 - Type: forward
-
                   TargetGroupArn: !Ref MyTargetGroup
-
             LoadBalancerArn: !Ref AppLoadbalancer
-
             Port: '80'
-
             Protocol: HTTP
-
-           
-
+            
     AutoScallingGroup:
-
         Type: AWS::AutoScaling::AutoScalingGroup
-
         Properties:
-
             AutoScalingGroupName: !Ref MyALBName
-
             Cooldown: 300
-
             DesiredCapacity: 1
-
-            HealthCheckGracePeriod: 90 
-
+            HealthCheckGracePeriod: 90  
             HealthCheckType: ELB
-
             LaunchTemplate:
-
                 LaunchTemplateId: !Ref 'EC2LaunchTemplate'
-
                 Version: !Ref 'LaunchTemplateVersion'
-
             MaxSize: 2
-
             MinSize: 1
-
-            TargetGroupARNs:
-
+            TargetGroupARNs: 
                 - !Ref 'MyTargetGroup'
-
             VPCZoneIdentifier: !Ref Subnets
-
-     
-
+      
     MyCPUPolicy:
-
         Type: AWS::AutoScaling::ScalingPolicy
-
         Properties:
-
             AutoScalingGroupName: !Ref AutoScallingGroup
-
             PolicyType: TargetTrackingScaling
-
             TargetTrackingConfiguration:
-
                 PredefinedMetricSpecification:
-
                     PredefinedMetricType: ASGAverageCPUUtilization
-
                 TargetValue: 70
-
             EstimatedInstanceWarmup: 300
+
