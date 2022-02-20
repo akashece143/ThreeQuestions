@@ -79,10 +79,10 @@ Three Tier Architecture,Instance metadata query and Python Function
     4- DBMultiAZ         (default is false)
 
     5- Engine             
-       *. mysql
-       *. postgres
-       *. oracle-ee
-       *. sqlserver-se
+       - mysql
+       - postgres
+       - oracle-ee
+       - sqlserver-se
        
 
     6- MaxAllocatedStorage
