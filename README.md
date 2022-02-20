@@ -4,6 +4,7 @@ Three Tier Architecture,Instance metadata query and Python Function
 #### 1st-Quest-3tierArchitecture####
 
 ALB WITH AUTOSCALING
+
 How to deploy
   1- Open AWS CloudFormation Service >> Create Stack >> paste the whole code  >> Run
 
@@ -32,6 +33,7 @@ How to deploy
       11- VPC
       
 What this stack does
+
    1- It is creating one Application load balancer
 
    2- It is creating Target group
