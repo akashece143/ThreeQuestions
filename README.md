@@ -1,9 +1,9 @@
 # ThreeQuestions
 Three Tier Architecture,Instance metadata query and Python Function
 
-####1st-Quest-3tierArchitecture####
-ALB WITH AUTOSCALING
+#### 1st-Quest-3tierArchitecture####
 
+ALB WITH AUTOSCALING
 How to deploy
   1- Open AWS CloudFormation Service >> Create Stack >> paste the whole code  >> Run
 
@@ -30,8 +30,7 @@ How to deploy
       10- Subnets       (EC2 Subnets)
 
       11- VPC
-
- 
+      
 What this stack does
    1- It is creating one Application load balancer
 
@@ -61,9 +60,8 @@ What this stack does
 
 
 RDS (MYSQL,Postres,Mssql,Oracle)
-How to deploy
 
- 
+How to deploy
 
 1- Open AWS CloudFormation Service >> Create Stack >> paste the whole code  >> Run
 
@@ -93,11 +91,9 @@ How to deploy
 
    12- VpcCid
 
+ What this stack does
  
-
-What this stack does
-
-1- We can create Database of our choice from below -
+ 1- We can create Database of our choice from below -
 
    Mysql
 
@@ -107,6 +103,4 @@ What this stack does
 
    sqlserver-se
 
- 
-
-2- It is creating DB and Db Security group and adding rule in it
+ 2- It is creating DB and Db Security group and adding rule in it
