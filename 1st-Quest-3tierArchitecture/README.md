@@ -99,7 +99,7 @@ Three Tier Architecture,Instance metadata query and Python Function
 
    12- VpcCid
 
-_  **What this stack does**_
+  **What this stack does**
  
  1- We can create Database of our choice from below -
 
