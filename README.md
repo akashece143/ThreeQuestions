@@ -5,7 +5,7 @@ Three Tier Architecture,Instance metadata query and Python Function
 
 ### ALB WITH AUTOSCALING
 
-_How to deploy_
+**_How to deploy_** &nbsp
   1- Open AWS CloudFormation Service >> Create Stack >> paste the whole code  >> Run
 
   2- It will ask below Parameters
@@ -32,7 +32,7 @@ _How to deploy_
 
       11- VPC
       
-_What this stack does_
+**_What this stack does_**
 
    1- It is creating one Application load balancer
 
@@ -61,9 +61,9 @@ _What this stack does_
    13- It is installing http server in EC2
 
 
-**RDS (MYSQL,Postres,Mssql,Oracle)**
+ ### RDS (MYSQL,Postres,Mssql,Oracle)
 
-_How to deploy_
+**_How to deploy_**
 
 1- Open AWS CloudFormation Service >> Create Stack >> paste the whole code  >> Run
 
@@ -93,7 +93,7 @@ _How to deploy_
 
    12- VpcCid
 
- _What this stack does_
+** _What this stack does_**
  
  1- We can create Database of our choice from below -
 
