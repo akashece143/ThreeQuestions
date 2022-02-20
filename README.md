@@ -5,7 +5,8 @@ Three Tier Architecture,Instance metadata query and Python Function
 
 ### ALB WITH AUTOSCALING
 
-**_How to deploy_** &nbsp
+**_How to deploy_** 
+
   1- Open AWS CloudFormation Service >> Create Stack >> paste the whole code  >> Run
 
   2- It will ask below Parameters
@@ -93,7 +94,7 @@ Three Tier Architecture,Instance metadata query and Python Function
 
    12- VpcCid
 
-** _What this stack does_**
+_  **What this stack does**_
  
  1- We can create Database of our choice from below -
 
