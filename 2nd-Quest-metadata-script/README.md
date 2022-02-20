@@ -13,7 +13,7 @@
 - Install pipenv
   - `sudo pip3 install pipenv`
 - Open the repository on your instance
-  - `cd aws-metadata-json`
+  - `cd 2nd-Quest-metadata-script`
 - Install project dependancies
   - `pipenv install`
 - pip3 install requests
@@ -21,7 +21,7 @@
 
 ## How to run
 - Open the `src` folder
-  - `cd metadata-script/src`
+  - `cd 2nd-Quest-metadata-script/src`
 - Run whichever script you need:
   - `python3 get_metadata.py`
   - `python3 get_key.py`
